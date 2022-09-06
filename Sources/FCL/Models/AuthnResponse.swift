@@ -59,16 +59,16 @@ struct AuthnResponse: Decodable {
     }
 }
 
-struct AuthnData: Decodable {
-    let addr: String?
-    let fType: String?
-    let fVsn: String?
-    let services: [Service]?
-    let proposer: Service?
-    let payer: [Service]?
-    let authorization: [Service]?
-    let signature: String?
-    let keyId: Int?
+public struct AuthnData: Decodable {
+    public let addr: String?
+    public let fType: String?
+    public let fVsn: String?
+    public let services: [Service]?
+    public let proposer: Service?
+    public let payer: [Service]?
+    public let authorization: [Service]?
+    public let signature: String?
+    public let keyId: Int?
 }
 
 enum Status: String, Decodable {
@@ -77,18 +77,18 @@ enum Status: String, Decodable {
     case declined = "DECLINED"
 }
 
-struct Service: Decodable {
-    let fType: String?
-    let fVsn: String?
-    let type: FCLServiceType?
-    let method: FCLServiceMethod?
-    let endpoint: URL?
-    let uid: String?
-    let id: String?
-    let identity: Identity?
-    let provider: Provider?
-    let params: [String: String]?
-    let data: FCLDataResponse?
+public struct Service: Decodable {
+    public let fType: String?
+    public let fVsn: String?
+    public let type: FCLServiceType?
+    public let method: FCLServiceMethod?
+    public let endpoint: URL?
+    public let uid: String?
+    public let id: String?
+    public let identity: Identity?
+    public let provider: Provider?
+    public let params: [String: String]?
+    public let data: FCLDataResponse?
 
     enum CodingKeys: String, CodingKey {
         case fType
@@ -104,7 +104,7 @@ struct Service: Decodable {
         case data
     }
 
-    init(from decoder: Decoder) throws {
+    public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let rawValue = try? container.decode([String: ParamValue].self, forKey: .params)
         var result = [String: String]()
@@ -125,26 +125,26 @@ struct Service: Decodable {
     }
 }
 
-struct FCLDataResponse: Decodable {
-    let fType: String
-    let fVsn: String
-    let nonce: String?
-    let address: String?
-    let email: FCLEmail?
-    let signatures: [AuthnData]?
+public struct FCLDataResponse: Decodable {
+    public let fType: String
+    public let fVsn: String
+    public let nonce: String?
+    public let address: String?
+    public let email: FCLEmail?
+    public let signatures: [AuthnData]?
 
-    struct FCLEmail: Decodable {
+    public struct FCLEmail: Decodable {
         let email: String
         let email_verified: Bool
     }
 }
 
-struct Identity: Decodable {
+public struct Identity: Decodable {
     public let address: String
-    let keyId: Int?
+    public let keyId: Int?
 }
 
-struct Provider: Decodable {
+public struct Provider: Decodable {
     public let fType: String?
     public let fVsn: String?
     public let address: String
