@@ -59,7 +59,7 @@ public final class FCL: NSObject, ObservableObject {
         return try await authenticate()
     }
     
-    public func getAccountProof() async throws -> FCLDataResponse {
+    public func getAccountProof() throws -> FCLDataResponse {
         guard let currentUser = currentUser, currentUser.loggedIn else {
             throw Flow.FError.unauthenticated
         }
