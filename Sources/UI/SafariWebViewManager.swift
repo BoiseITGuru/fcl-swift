@@ -5,42 +5,43 @@
 //  Created by lmcmz on 14/11/21.
 //
 
-import Foundation
-import SafariServices
 
-class SafariWebViewManager: NSObject {
+import UIKit
+import WebKit
+
+class SafariWebViewManager: NSObject, WKNavigationDelegate {
     static var shared = SafariWebViewManager()
-    var safariVC: SFSafariViewController?
+    var webView: WKWebView?
     var delegate: HTTPSessionDelegate?
-
+    
     static func openSafariWebView(url: URL) {
         DispatchQueue.main.async {
-            let vc = SFSafariViewController(url: url)
-            vc.delegate = SafariWebViewManager.shared
-            vc.presentationController?.delegate = SafariWebViewManager.shared
-            vc.modalPresentationStyle = .formSheet
-//            vc.isModalInPresentation = true
-            SafariWebViewManager.shared.safariVC = vc
-            UIApplication.shared.topMostViewController?.present(vc, animated: true, completion: nil)
+            let webView = WKWebView()
+            webView.navigationDelegate = SafariWebViewManager.shared
+            webView.frame = CGRect(origin: .zero, size: CGSize(width: 800.0, height: 800.0))
+            SafariWebViewManager.shared.webView = webView
+            UIApplication.shared.topMostViewController?.view.addSubview(webView)
+            webView.load(URLRequest(url: url))
         }
     }
-
+    
     static func dismiss() {
-        if let vc = SafariWebViewManager.shared.safariVC {
+        if let webView = SafariWebViewManager.shared.webView {
             DispatchQueue.main.async {
-                vc.dismiss(animated: true, completion: nil)
+                webView.removeFromSuperview()
             }
             SafariWebViewManager.shared.stopPolling()
         }
     }
 
+    
     func stopPolling() {
         delegate?.isPending = false
     }
 }
 
-extension SafariWebViewManager: SFSafariViewControllerDelegate, UIAdaptivePresentationControllerDelegate {
-    func safariViewControllerDidFinish(_: SFSafariViewController) {
+extension SafariWebViewManager {
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         stopPolling()
     }
 
@@ -48,3 +49,4 @@ extension SafariWebViewManager: SFSafariViewControllerDelegate, UIAdaptivePresen
         stopPolling()
     }
 }
+
